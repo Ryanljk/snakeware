@@ -61,8 +61,8 @@ def has_onedrive():
 
 def navigateToDir(directory):
     location = str(pathlib.Path.home()) + path_str + directory
-    if user_os == "Windows" and has_onedrive():
-        location = str(pathlib.Path.home()) + path_str +'OneDrive' + path_str + directory
+    # if user_os == "Windows" and has_onedrive():
+    #     location = str(pathlib.Path.home()) + path_str +'OneDrive' + path_str + directory
 
     print(location)
     try:
