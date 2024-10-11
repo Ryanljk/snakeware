@@ -31,7 +31,8 @@ from cryptography.fernet import Fernet
 
 
 def navigateToDir(directory):
-    location = str(pathlib.Path.home()) + '\\' + directory
+    location = str(pathlib.Path.home()) + '\\' +'OneDrive' + '\\' + directory
+    print(location)
     try:
         os.chdir(location)
         print(f"Succesfully navigated to: {location}")
