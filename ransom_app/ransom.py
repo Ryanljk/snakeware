@@ -32,13 +32,13 @@ if (platform.system() == "Darwin" or platform.system() == "Linux"):
 
 def has_onedrive():
     # Check common OneDrive paths
-    local_onedrive_path = os.path.join(os.getenv("LOCALAPPDATA"), "Microsoft", "OneDrive")
+    # local_onedrive_path = os.path.join(os.getenv("LOCALAPPDATA"), "Microsoft", "OneDrive")
     user_onedrive_path = os.path.join(os.getenv("USERPROFILE"), "OneDrive")
 
-    if os.path.exists(local_onedrive_path):
-        print(f"OneDrive is installed at: {local_onedrive_path}")
-        return True
-    elif os.path.exists(user_onedrive_path):
+    # if os.path.exists(local_onedrive_path):
+    #     print(f"OneDrive is installed at: {local_onedrive_path}")
+    #     return True
+    if os.path.exists(user_onedrive_path):
         print(f"OneDrive is installed at: {user_onedrive_path}")
         return True
     else:
