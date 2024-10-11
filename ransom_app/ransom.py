@@ -27,11 +27,27 @@ from cryptography.fernet import Fernet
 # from sendgrid.helpers.mail import Mail
 
 
+def has_onedrive():
+    # Check common OneDrive paths
+    local_onedrive_path = os.path.join(os.getenv("LOCALAPPDATA"), "Microsoft", "OneDrive")
+    user_onedrive_path = os.path.join(os.getenv("USERPROFILE"), "OneDrive")
 
+    if os.path.exists(local_onedrive_path):
+        print(f"OneDrive is installed at: {local_onedrive_path}")
+        return True
+    elif os.path.exists(user_onedrive_path):
+        print(f"OneDrive is installed at: {user_onedrive_path}")
+        return True
+    else:
+        print("OneDrive is not installed or not found.")
+        return False
 
 
 def navigateToDir(directory):
-    location = str(pathlib.Path.home()) + '\\' +'OneDrive' + '\\' + directory
+    location = str(pathlib.Path.home()) + '\\' + directory
+    if has_onedrive():
+        location = str(pathlib.Path.home()) + '\\' +'OneDrive' + '\\' + directory
+
     print(location)
     try:
         os.chdir(location)
