@@ -1,2 +1,10 @@
+altgraph==0.17.4
+cffi==1.17.1
 cryptography==36.0.1
+macholib==1.16.3
+packaging==24.1
+pycparser==2.22
+pygame==2.6.1
+pyinstaller==6.10.0
+pyinstaller-hooks-contrib==2024.8
 python-dotenv==0.19.2
