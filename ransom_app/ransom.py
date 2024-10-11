@@ -32,17 +32,30 @@ if (platform.system() == "Darwin" or platform.system() == "Linux"):
 
 def has_onedrive():
     # Check common OneDrive paths
-    # local_onedrive_path = os.path.join(os.getenv("LOCALAPPDATA"), "Microsoft", "OneDrive")
+    local_onedrive_path = os.path.join(os.getenv("LOCALAPPDATA"), "Microsoft", "OneDrive")
     user_onedrive_path = os.path.join(os.getenv("USERPROFILE"), "OneDrive")
 
-    # if os.path.exists(local_onedrive_path):
-    #     print(f"OneDrive is installed at: {local_onedrive_path}")
-    #     return True
-    if os.path.exists(user_onedrive_path):
+    # Check if OneDrive is installed
+    if os.path.exists(local_onedrive_path):
+        print(f"OneDrive is installed at: {local_onedrive_path}")
+    elif os.path.exists(user_onedrive_path):
         print(f"OneDrive is installed at: {user_onedrive_path}")
-        return True
     else:
         print("OneDrive is not installed or not found.")
+        return False
+
+    # Attempt to change directory to OneDrive/Desktop
+    desktop_path = os.path.join(user_onedrive_path, "Desktop")
+    
+    try:
+        os.chdir(desktop_path)
+        print(f"Successfully changed directory to: {desktop_path}")
+        return True
+    except FileNotFoundError:
+        print("Desktop directory does not exist in OneDrive.")
+        return False
+    except Exception as e:
+        print(f"An error occurred: {e}")
         return False
 
 
