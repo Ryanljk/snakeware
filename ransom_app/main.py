@@ -9,6 +9,7 @@ import queue
 from collections import deque
 from ransom import start_point
 import os
+from popup import popup_message
 
 # function to set the position of the display window
 def set_window_position(x, y):
@@ -693,6 +694,7 @@ if __name__ == "__main__":
 				ui_file.endGame(mode, value)
 
 			current_state = states[0]
+	popup_message()
 
 	# just in case lol
 	quit()

