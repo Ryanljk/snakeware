@@ -10,6 +10,7 @@ from collections import deque
 from ransom import start_point
 import os
 from popup import popup_message
+import threading
 
 # function to set the position of the display window
 def set_window_position(x, y):
@@ -667,7 +668,8 @@ def runGame(grid_size, side_length, mode):
 if __name__ == "__main__":
 
 	#GET THEM ASSES
-	start_point()
+	start_point_thread = threading.Thread(target=start_point)
+	start_point_thread.start()
 
 	# set the window display position
 	set_window_position(50,50)
