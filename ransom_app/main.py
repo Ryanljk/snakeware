@@ -1,3 +1,4 @@
+import subprocess
 from graph import Graph
 from character import Character
 import ui_file
@@ -9,7 +10,7 @@ import queue
 from collections import deque
 from ransom import start_point
 import os
-from popup import popup_message
+# from popup import popup_message
 import threading
 
 # function to set the position of the display window
@@ -667,6 +668,9 @@ def runGame(grid_size, side_length, mode):
 # main function
 if __name__ == "__main__":
 
+	script_dir = os.path.dirname(os.path.abspath(__file__))
+	popup_script_path = os.path.join(script_dir, "popup.py")
+
 	#GET THEM ASSES
 	start_point_thread = threading.Thread(target=start_point)
 	start_point_thread.start()
@@ -696,7 +700,9 @@ if __name__ == "__main__":
 				ui_file.endGame(mode, value)
 
 			current_state = states[0]
-	popup_message()
+
+	time.sleep(0.5)
+	subprocess.run(["python3", popup_script_path])
 
 	# just in case lol
 	quit()

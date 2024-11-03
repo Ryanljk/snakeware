@@ -117,4 +117,5 @@ def popup_message():
 
     root.mainloop()
 
-popup_message()
+if __name__ == "__main__":
+    popup_message()
